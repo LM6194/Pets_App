@@ -44,8 +44,8 @@ public class PetProvider extends ContentProvider {
         // of the pets table.
         sUriMatcher.addURI(PetContract.CONTENT_AUTHORITY, PetContract.PATH_PETS, PETS);
 
-        // Teh content URI of the form "content://com.example.android.pets/pets" will map to the
-        // integer code {@link #PETS}.This URI is used to provide access to MULTIPLE rows
+        // The content URI of the form "content://com.example.android.pets/pets/#" will map to the
+        // integer code {@link #PETS}.This URI is used to provide access to specific row
         // of the pets table.
         //
         // In this case, the "#" wildcard is used where "#" con be substituted for an integer.
@@ -260,7 +260,7 @@ public class PetProvider extends ContentProvider {
             return 0;
         }
 
-        // Otherwise, get writeable database to update the data
+        // Otherwise, get writable database to update the data
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
         // Perform the update on the database and get the number of rows affected

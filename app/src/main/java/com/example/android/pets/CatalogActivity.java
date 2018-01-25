@@ -66,7 +66,7 @@ public class CatalogActivity extends AppCompatActivity implements
         View emptyView = findViewById(R.id.empty_view);
         petListView.setEmptyView(emptyView);
 
-        //Setup an Adapter to create a list item for eack row of pet data in the Cursor.
+        //Setup an Adapter to create a list item for each row of pet data in the Cursor.
         // There is no pet data yet (until the loader finished) so pass in null for the Cursor.
         mCursorAdapter = new PetCursorAdapter(this, null);
         petListView.setAdapter(mCursorAdapter);
@@ -115,8 +115,8 @@ public class CatalogActivity extends AppCompatActivity implements
     }
 
     /**
-     +     * Helper method to delete all pets in the database.
-     +     */
+     * Helper method to delete all pets in the database.
+     */
     private void deleteAllPets() {
         int rowsDeleted = getContentResolver().delete(PetEntry.CONTENT_URI, null, null);
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");

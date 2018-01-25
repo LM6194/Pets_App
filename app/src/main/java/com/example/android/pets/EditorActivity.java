@@ -108,11 +108,13 @@ public class EditorActivity extends AppCompatActivity implements
         }else {
             // Other wise this is an existing pet, so change app bar to say "Edit Pet"
             setTitle(getString(R.string.editor_activity_edit_pet));
+
+            // Prepare the loader.  Either re-connect with an existing one,
+            // or start a new one.
+            getLoaderManager().initLoader(EXISTING_PET_LOADER, null,  this);
         }
 
-        // Prepare the loader.  Either re-connect with an existing one,
-        // or start a new one.
-        getLoaderManager().initLoader(EXISTING_PET_LOADER, null,  this);
+
 
         // Find all relevant views that we will need to read user input from
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
@@ -192,11 +194,12 @@ public class EditorActivity extends AppCompatActivity implements
 
 
         // Create a ContentValues object where column names are the keys,
-        // and Toto's attributes are the values.
+        // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(PetEntry.COLUMN_PET_NAME, nameString);
         values.put(PetEntry.COLUMN_PET_BREED, breedString);
         values.put(PetEntry.COLUMN_PET_GENDER, mGender);
+
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         int weight = 0;
@@ -211,7 +214,7 @@ public class EditorActivity extends AppCompatActivity implements
             // returning the content URI for the new pet.
             Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
 
-            // show a toast message depending on whether or not was successfull.
+            // show a toast message depending on whether or not was successful.
             if (newUri == null){
                 // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(this,getString(R.string.editor_insert_pet_failed),
@@ -334,6 +337,9 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (mCurrentPetUri == null) {
+            return null;
+        }
         // Since the editor shows all pet attributes, define a projection that contains
         // all columns from the pet table
         String[] projection = {
@@ -345,7 +351,7 @@ public class EditorActivity extends AppCompatActivity implements
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,  //Parent activity context
                 mCurrentPetUri,               //Query the content URI for the current pet
-                projection,                   // Columns to include in the reulting Cursor
+                projection,                   // Columns to include in the resulting Cursor
                 null,                         // No selection clause
                 null,                      // No selection Arguments
                 null);                        // Default sort order
@@ -394,7 +400,7 @@ public class EditorActivity extends AppCompatActivity implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear aut all the data from the input fields.
+        // If the loader is invalidated, clear out all the data from the input fields.
         mNameEditText.setText("");
         mBreedEditText.setText("");
         mWeightEditText.setText("");
